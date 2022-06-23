@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeceb990f10fa60478fe06d05ca05c5d, type: 3}
-  m_Name: PlayerBTree
+  m_Script: {fileID: 11500000, guid: 58a429dab92d6b64a9218e660684dc04, type: 3}
+  m_Name: FollowSelector
   m_EditorClassIdentifier: 
-  _node: {fileID: 11400000, guid: 690510a833568e34da5f1eeef6cfc652, type: 2}
+  _nodes:
+  - {fileID: 11400000, guid: 38ce233593c81d242a3bd87a33d39680, type: 2}
+  - {fileID: 11400000, guid: 1fed70af0be59894196de8260ecfc4bd, type: 2}

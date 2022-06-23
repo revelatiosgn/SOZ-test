@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58a429dab92d6b64a9218e660684dc04, type: 3}
-  m_Name: AICombatSelector
+  m_Script: {fileID: 11500000, guid: 62de3f97c74b70f42b23adc2d9a8bc35, type: 3}
+  m_Name: FollowSequence
   m_EditorClassIdentifier: 
   _nodes:
-  - {fileID: 11400000, guid: 822093972342f16408aff8011fb1a715, type: 2}
+  - {fileID: 11400000, guid: 3f85063b6d1e9de408a8a10ab4f0cc17, type: 2}
+  - {fileID: 11400000, guid: a79b559ea33c3eb469228c23dd2972b4, type: 2}
   - {fileID: 11400000, guid: 231c432c969bf494b8e984db6fc5abb8, type: 2}
-  - {fileID: 11400000, guid: 2b1e42de4adc4264189c4ff4b35139f9, type: 2}

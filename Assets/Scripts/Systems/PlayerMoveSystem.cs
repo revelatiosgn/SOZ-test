@@ -22,6 +22,7 @@ public class PlayerMoveSystem : IEcsRunSystem
                 ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(entity);
                 navAgentData.NavMeshAgent.destination = moveEvent.Destination;
                 navAgentData.NavMeshAgent.isStopped = false;
+
                 ref CombatData combatData = ref _combatPool.Value.Get(entity);
                 combatData.TargetEnitity = -1;
             }
