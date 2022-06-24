@@ -10,7 +10,8 @@ using Voody.UniLeo.Lite;
 public class Startup : MonoBehaviour
 {
     private EcsWorld _world;
-    private EcsSystems _systems;
+    private EcsSystems _updateSystems;
+    private EcsSystems _fixedUpdateSystems;
     private SharedData _sharedData;
 
     private void Start()
@@ -22,34 +23,45 @@ public class Startup : MonoBehaviour
             EventsBus = new EventsBus()
         };
 
-        _systems = new EcsSystems(_world, _sharedData);
-        _systems
+        _updateSystems = new EcsSystems(_world, _sharedData);
+        _updateSystems
             .ConvertScene()
             .Add(new PlayerInputSystem())
             .Add(new PlayerEventSystem())
             .Add(new PlayerMoveSystem())
             .Add(new PlayerInteractSystem())
             .Add(new BTreeSystem())
-            .Add(new VisionSystem())
             .Add(new AnimationSystem())
             .Add(new CombatSystem())
+            .Add(new HealthSystem())
+            .Add(new MoveSystem())
             .Add(_sharedData.EventsBus.GetDestroyEventsSystem()
                 .IncSingleton<PlayerClickEvent>()
                 .IncSingleton<PlayerMoveEvent>()
-                .IncSingleton<PlayerInteractEvent>()
-                .IncReplicant<AttackEvent>())
+                .IncSingleton<PlayerInteractEvent>())
+            .Inject()
+            .Init();
+
+        _fixedUpdateSystems = new EcsSystems(_world, _sharedData);
+        _fixedUpdateSystems
+            .Add(new VisionSystem())
             .Inject()
             .Init();
     }
 
     private void Update()
     {
-        _systems.Run();
+        _updateSystems.Run();
+    }
+
+    private void FixedUpdate()
+    {
+        _fixedUpdateSystems.Run();
     }
 
     private void OnDestroy()
     {
-        _systems.Destroy();
+        _updateSystems.Destroy();
         _world.Destroy();
         _sharedData.EventsBus.Destroy();
     }

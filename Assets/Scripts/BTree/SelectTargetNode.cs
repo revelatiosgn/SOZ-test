@@ -18,6 +18,7 @@ public sealed class SelectTargetNode : BTActionNode
 
         EcsPool<VisionData> visionPool = world.GetPool<VisionData>();
         EcsPool<TransformData> transformPool = world.GetPool<TransformData>();
+        EcsPool<HealthData> healthPool = world.GetPool<HealthData>();
         
         ref VisionData visionData = ref visionPool.Get(blackboard.Entity);
         if (visionData.VisibleEntities.Count == 0)
@@ -27,6 +28,10 @@ public sealed class SelectTargetNode : BTActionNode
         float minSqrRange = float.MaxValue;
         foreach (int visibleEntity in visionData.VisibleEntities)
         {
+            ref HealthData healthData = ref healthPool.Get(visibleEntity);
+            if (healthData.IsDead)
+                continue;
+
             ref TransformData visibleTransform = ref transformPool.Get(visibleEntity);
             float sqrRange = Vector3.SqrMagnitude(selfTransform.Transform.position - visibleTransform.Transform.position);
             if (sqrRange < minSqrRange)

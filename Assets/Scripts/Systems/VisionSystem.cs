@@ -29,16 +29,12 @@ public class VisionSystem : IEcsRunSystem
                     if (angle > visionData.Angle * .5f)
                         continue;
 
-                    // MOVE TO DATA
+                    // TODO: move to data
                     Vector3 offset = new Vector3(0f, 1f, 0f);
                     if (!Physics.Linecast(transformData.Transform.position + offset, collider.transform.position + offset, LayerMask.GetMask("Environment"), QueryTriggerInteraction.Collide))
                     {
                         if (collider.transform.TryGetComponent<ConvertToEntity>(out ConvertToEntity convertToEntity))
                             visionData.VisibleEntities.Add(convertToEntity.TryGetEntity().Value);
-                    }
-                    else
-                    {
-                        Debug.LogError("NOT VISIBLE");
                     }
                 }
             }

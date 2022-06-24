@@ -21,6 +21,7 @@ public class PlayerInteractSystem : IEcsRunSystem
             {
                 ref CombatData combatData = ref _combatPool.Value.Get(entity);
                 combatData.TargetEnitity = playerInteractEvent.Entity;
+
                 ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(entity);
                 navAgentData.NavMeshAgent.isStopped = true;
             }

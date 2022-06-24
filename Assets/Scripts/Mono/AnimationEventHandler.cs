@@ -9,6 +9,6 @@ public class AnimationEventHandler : MonoBehaviour
 
     public void Attack()
     {
-        MyEventBus.OnAttackEnd?.Invoke(_convertToEntity.TryGetEntity().Value);
+        // MyEventBus.OnAttackEnd?.Invoke(_convertToEntity.TryGetEntity().Value);
     }
 }

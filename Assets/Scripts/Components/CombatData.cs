@@ -9,4 +9,5 @@ public struct CombatData
     public float AttackRange;
     public float AttackDelay;
     public float AttackDelayTimer;
+    public float AttackDamage;
 }

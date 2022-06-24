@@ -106,6 +106,10 @@ PrefabInstance:
       propertyPath: _animator
       value: 
       objectReference: {fileID: 7167967050615382775}
+    - target: {fileID: 4538805341319723893, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _speed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4538805341319723894, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: _BTree
       value: 
@@ -114,13 +118,25 @@ PrefabInstance:
       propertyPath: _attackDelay
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4538805341319723895, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _attackRange
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4538805341319723895, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _attackDamage
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4538805341319723896, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _radius
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.91
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -128,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_LocalRotation.w

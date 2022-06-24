@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: _animator
       value: 
       objectReference: {fileID: 30334117719795079}
+    - target: {fileID: 4538805341319723893, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _speed
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4538805341319723894, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: _BTree
       value: 
@@ -21,7 +25,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4538805341319723895, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: _attackRange
-      value: 3
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4538805341319723896, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
+      propertyPath: _radius
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6189634367031352189, guid: b87aaa3f56b96284db783b13e588879c, type: 3}
       propertyPath: m_RootOrder
@@ -161,7 +169,7 @@ Animator:
   m_GameObject: {fileID: 6939639520500554498}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: bcde5670e64760340adf1c6cfdf23c08, type: 3}
-  m_Controller: {fileID: 9100000, guid: 4ac5891836253a04386cb0536ee9e655, type: 2}
+  m_Controller: {fileID: 22100000, guid: 50c0b601cfa3f5047b70022517907b27, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
