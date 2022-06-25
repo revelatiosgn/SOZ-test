@@ -20,7 +20,9 @@ public sealed class LookAtTargetNode : BTActionNode
         ref TransformData selfTransform = ref transformPool.Get(blackboard.Entity);
         ref TransformData targetTransform = ref transformPool.Get(targetEntity);
 
-        selfTransform.Transform.LookAt(targetTransform.Transform.position, Vector3.up);
+        Vector3 pos = targetTransform.Transform.position;
+        pos.y = selfTransform.Transform.position.y;
+        selfTransform.Transform.LookAt(pos, Vector3.up);
 
         return true;
     }
