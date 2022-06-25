@@ -11,5 +11,6 @@ public sealed class AnimationDataProvider : MonoProvider<AnimationData>
     private void Awake()
     {
         value.Animator = _animator;
+        value.AnimationEvents = new Queue<AnimationEvent>();
     }
 }

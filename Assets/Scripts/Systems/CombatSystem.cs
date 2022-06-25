@@ -11,6 +11,7 @@ public class CombatSystem : IEcsRunSystem
     private readonly EcsFilterInject<Inc<CombatData>> _filter = default;
     private readonly EcsPoolInject<CombatData> _combatPool = default;
     private readonly EcsPoolInject<HealthData> _healthPool = default;
+    private readonly EcsPoolInject<PlayerTag> _playerPool = default;
 
     public void Run(EcsSystems systems)
     {
@@ -45,12 +46,24 @@ public class CombatSystem : IEcsRunSystem
         foreach (var eventEnitiy in eventsBus.GetEventBodies<AttackExecEvent>(out var eventsPool))
         {
             int attackerEntity = eventsPool.Get(eventEnitiy).AttackerEnity;
+            if (attackerEntity == -1)
+                continue;
 
-            ref CombatData selfCombatData = ref _combatPool.Value.Get(attackerEntity);
-            ref CombatData targetCombatData = ref _combatPool.Value.Get(selfCombatData.TargetEnitity);
+            ref CombatData attackerCombatData = ref _combatPool.Value.Get(attackerEntity);
+            if (attackerCombatData.TargetEnitity == -1)
+                continue;
+
+            ref CombatData targetCombatData = ref _combatPool.Value.Get(attackerCombatData.TargetEnitity);
+            
+            eventsBus.NewEvent<AttackDamageEvent>() = new AttackDamageEvent { DamagedEntity = attackerCombatData.TargetEnitity, Damage = attackerCombatData.AttackDamage };
+
+
+            // Player attacked
+            if (_playerPool.Value.Has(attackerCombatData.TargetEnitity))
+                continue;
+            
+            // TODO: ловить ивент в vision system
             targetCombatData.TargetEnitity = attackerEntity;
-
-            eventsBus.NewEvent<AttackDamageEvent>() = new AttackDamageEvent { DamagedEntity = selfCombatData.TargetEnitity, Damage = selfCombatData.AttackDamage };
         }
         
         // Death

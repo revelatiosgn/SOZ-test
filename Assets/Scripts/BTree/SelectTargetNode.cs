@@ -19,6 +19,7 @@ public sealed class SelectTargetNode : BTActionNode
         EcsPool<VisionData> visionPool = world.GetPool<VisionData>();
         EcsPool<TransformData> transformPool = world.GetPool<TransformData>();
         EcsPool<HealthData> healthPool = world.GetPool<HealthData>();
+        EcsPool<FactionData> factionPool = world.GetPool<FactionData>();
         
         ref VisionData visionData = ref visionPool.Get(blackboard.Entity);
         if (visionData.VisibleEntities.Count == 0)
@@ -26,10 +27,17 @@ public sealed class SelectTargetNode : BTActionNode
 
         ref TransformData selfTransform = ref transformPool.Get(blackboard.Entity);
         float minSqrRange = float.MaxValue;
+
+        ref FactionData selfFaction = ref factionPool.Get(blackboard.Entity);
+
         foreach (int visibleEntity in visionData.VisibleEntities)
         {
             ref HealthData healthData = ref healthPool.Get(visibleEntity);
             if (healthData.IsDead)
+                continue;
+
+            ref FactionData factionData = ref factionPool.Get(visibleEntity);
+            if (factionData.Faction == selfFaction.Faction)
                 continue;
 
             ref TransformData visibleTransform = ref transformPool.Get(visibleEntity);

@@ -9,10 +9,19 @@ using Voody.UniLeo.Lite;
 
 public class Startup : MonoBehaviour
 {
+    private static Startup _instance;
+
     private EcsWorld _world;
     private EcsSystems _updateSystems;
     private EcsSystems _fixedUpdateSystems;
     private SharedData _sharedData;
+
+    public static EcsWorld World => _instance._world;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
 
     private void Start()
     {
@@ -30,11 +39,11 @@ public class Startup : MonoBehaviour
             .Add(new PlayerEventSystem())
             .Add(new PlayerMoveSystem())
             .Add(new PlayerInteractSystem())
-            .Add(new BTreeSystem())
             .Add(new AnimationSystem())
             .Add(new CombatSystem())
             .Add(new HealthSystem())
             .Add(new MoveSystem())
+            .Add(new BTreeSystem())
             .Add(_sharedData.EventsBus.GetDestroyEventsSystem()
                 .IncSingleton<PlayerClickEvent>()
                 .IncSingleton<PlayerMoveEvent>()

@@ -8,7 +8,8 @@ using Voody.UniLeo.Lite;
 
 public class AnimationSystem : IEcsRunSystem
 {
-    private readonly EcsFilterInject<Inc<AnimationData, NavAgentData>> _filter = default;
+    private readonly EcsFilterInject<Inc<AnimationData>> _filter = default;
+    
     private readonly EcsPoolInject<AnimationData> _animationPool = default;
     private readonly EcsPoolInject<NavAgentData> _navAgentPool = default;
             
@@ -21,14 +22,24 @@ public class AnimationSystem : IEcsRunSystem
         EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
         eventsBus.DestroyEvents<AttackExecEvent>();
 
-        // Move
         foreach (int entity in _filter.Value)
         {
             ref AnimationData animationData = ref _animationPool.Value.Get(entity);
-            ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(entity);
 
-            float moveSpeed = navAgentData.NavMeshAgent.velocity.magnitude / navAgentData.NavMeshAgent.speed;
-            animationData.Animator.SetFloat(_moveSpeedHash, moveSpeed);
+            // Move
+            if (_navAgentPool.Value.Has(entity))
+            {
+                ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(entity);
+                float moveSpeed = navAgentData.NavMeshAgent.velocity.magnitude / navAgentData.NavMeshAgent.speed;
+                animationData.Animator.SetFloat(_moveSpeedHash, moveSpeed);
+            }
+
+            // Events
+            while (animationData.AnimationEvents.TryDequeue(out AnimationEvent animationEvent))
+            {
+                if (animationEvent == AnimationEvent.AttackExec)
+                    eventsBus.NewEvent<AttackExecEvent>().AttackerEnity = entity;
+            }
         }
 
         // Attack begin
@@ -37,8 +48,6 @@ public class AnimationSystem : IEcsRunSystem
             int attackerEntity = eventsPool.Get(eventEntity).AttackerEnity;
             ref AnimationData animationData = ref _animationPool.Value.Get(attackerEntity);
             animationData.Animator.CrossFade(_attackHash, .01f);
-
-            eventsBus.NewEvent<AttackExecEvent>().AttackerEnity = attackerEntity;
         }
 
         // Death
