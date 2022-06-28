@@ -18,14 +18,16 @@ public class CombatSystem : IEcsRunSystem
         EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
         eventsBus.DestroyEvents<AttackDamageEvent>();
 
-        // Attack delay
+        
         foreach (int entity in _filter.Value)
         {
             ref CombatData combatData = ref _combatPool.Value.Get(entity);
 
+            // Attack delay
             if (combatData.AttackDelayTimer > 0f)
                 combatData.AttackDelayTimer -= Time.deltaTime;
 
+            // Target dead - reset target
             if (combatData.TargetEnitity != -1)
             {
                 if (!_healthPool.Value.Has(combatData.TargetEnitity) || _healthPool.Value.Get(combatData.TargetEnitity).IsDead)

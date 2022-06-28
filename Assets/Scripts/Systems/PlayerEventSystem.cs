@@ -10,6 +10,7 @@ public class PlayerEventSystem : IEcsRunSystem
 {
     private readonly EcsFilterInject<Inc<PlayerTag>> _filter = default;
     private readonly EcsPoolInject<HealthData> _healthPool = default;
+    private readonly EcsPoolInject<PlayerTag> _playerPool = default;
     
     public void Run(EcsSystems systems)
     {
@@ -31,7 +32,7 @@ public class PlayerEventSystem : IEcsRunSystem
                 if (charHit.collider.TryGetComponent<ConvertToEntity>(out ConvertToEntity convertToEntity))
                 {
                     int entity = convertToEntity.TryGetEntity().Value;
-                    if (!_healthPool.Value.Has(entity) || _healthPool.Value.Get(entity).IsDead)
+                    if (_playerPool.Value.Has(entity) || !_healthPool.Value.Has(entity) || _healthPool.Value.Get(entity).IsDead)
                         continue;
 
                     eventsBus.NewEventSingleton<PlayerInteractEvent>().Entity = convertToEntity.TryGetEntity().Value;

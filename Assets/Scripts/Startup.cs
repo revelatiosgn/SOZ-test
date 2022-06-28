@@ -12,8 +12,7 @@ public class Startup : MonoBehaviour
     private static Startup _instance;
 
     private EcsWorld _world;
-    private EcsSystems _updateSystems;
-    private EcsSystems _fixedUpdateSystems;
+    private EcsSystems _systems;
     private SharedData _sharedData;
 
     public static EcsWorld World => _instance._world;
@@ -32,45 +31,36 @@ public class Startup : MonoBehaviour
             EventsBus = new EventsBus()
         };
 
-        _updateSystems = new EcsSystems(_world, _sharedData);
-        _updateSystems
+        _systems = new EcsSystems(_world, _sharedData);
+        _systems
             .ConvertScene()
             .Add(new PlayerInputSystem())
             .Add(new PlayerEventSystem())
             .Add(new PlayerMoveSystem())
             .Add(new PlayerInteractSystem())
+            .Add(new VisionSystem())
             .Add(new AnimationSystem())
             .Add(new CombatSystem())
             .Add(new HealthSystem())
             .Add(new MoveSystem())
             .Add(new BTreeSystem())
+            .Add(new EventsSystem())
             .Add(_sharedData.EventsBus.GetDestroyEventsSystem()
                 .IncSingleton<PlayerClickEvent>()
                 .IncSingleton<PlayerMoveEvent>()
                 .IncSingleton<PlayerInteractEvent>())
             .Inject()
             .Init();
-
-        _fixedUpdateSystems = new EcsSystems(_world, _sharedData);
-        _fixedUpdateSystems
-            .Add(new VisionSystem())
-            .Inject()
-            .Init();
     }
 
     private void Update()
     {
-        _updateSystems.Run();
-    }
-
-    private void FixedUpdate()
-    {
-        _fixedUpdateSystems.Run();
+        _systems.Run();
     }
 
     private void OnDestroy()
     {
-        _updateSystems.Destroy();
+        _systems.Destroy();
         _world.Destroy();
         _sharedData.EventsBus.Destroy();
     }

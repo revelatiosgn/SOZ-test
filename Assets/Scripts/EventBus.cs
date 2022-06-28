@@ -116,6 +116,17 @@ namespace SevenBoldPencil.EasyEvents
             }
         }
 
+        public void DestroyAllEvents()
+        {
+            foreach (var key in cachedFilters.Keys)
+            {
+                var filter = cachedFilters[key];
+                foreach (var eventEntity in filter) {
+                    eventsWorld.DelEntity(eventEntity);
+                }
+            }
+        }
+
         #endregion
 
         #region DestroyEventsSystem
