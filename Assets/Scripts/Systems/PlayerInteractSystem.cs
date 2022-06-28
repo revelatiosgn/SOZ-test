@@ -13,10 +13,12 @@ public class PlayerInteractSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
 
-        if (eventsBus.HasEventSingleton<PlayerInteractEvent>(out PlayerInteractEvent playerInteractEvent))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<PlayerInteractEvent>(out var eventsPool))
         {
+            ref PlayerInteractEvent playerInteractEvent = ref eventsPool.Get(eventEnitiy);
+
             foreach (int entity in _filter.Value)
             {
                 ref CombatData combatData = ref _combatPool.Value.Get(entity);

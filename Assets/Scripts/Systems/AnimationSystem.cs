@@ -19,8 +19,7 @@ public class AnimationSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-        eventsBus.DestroyEvents<AttackExecEvent>();
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
 
         foreach (int entity in _filter.Value)
         {
@@ -38,12 +37,12 @@ public class AnimationSystem : IEcsRunSystem
             while (animationData.AnimationEvents.TryDequeue(out AnimationEvent animationEvent))
             {
                 if (animationEvent == AnimationEvent.AttackExec)
-                    eventsBus.NewEvent<AttackExecEvent>().AttackerEnity = entity;
+                    eventsBuffer.NewEvent<AttackExecEvent>().AttackerEnity = entity;
             }
         }
 
         // Attack begin
-        foreach (var eventEntity in eventsBus.GetEventBodies<AttackBeginEvent>(out var eventsPool))
+        foreach (var eventEntity in eventsBuffer.GetEventBodies<AttackBeginEvent>(out var eventsPool))
         {
             int attackerEntity = eventsPool.Get(eventEntity).AttackerEnity;
             ref AnimationData animationData = ref _animationPool.Value.Get(attackerEntity);
@@ -51,7 +50,7 @@ public class AnimationSystem : IEcsRunSystem
         }
 
         // Death
-        foreach (var eventEntity in eventsBus.GetEventBodies<DeathEvent>(out var eventsPool))
+        foreach (var eventEntity in eventsBuffer.GetEventBodies<DeathEvent>(out var eventsPool))
         {
             int deadEntity = eventsPool.Get(eventEntity).DeadEntity;
             ref AnimationData animationData = ref _animationPool.Value.Get(deadEntity);

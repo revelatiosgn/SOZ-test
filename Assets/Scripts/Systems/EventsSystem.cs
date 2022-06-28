@@ -7,12 +7,10 @@ using Voody.UniLeo.Lite;
 
 public class EventsSystem : IEcsRunSystem
 {
-    private List<EventsBus> _eventBuses = new List<EventsBus> { new EventsBus(), new EventsBus() };
-    private int _eventBusIndex = 0;
-
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
+        eventsBuffer.Switch();
     }
 }
 
@@ -20,6 +18,16 @@ public class EventsBuffer
 {
     private EventsBus writeBus = new EventsBus();
     private EventsBus readBus = new EventsBus();
+    
+    public ref T NewEvent<T>() where T : struct, IEventReplicant
+    {
+        return ref writeBus.NewEvent<T>();
+    }
+
+    public EcsFilter GetEventBodies<T>(out EcsPool<T> pool) where T : struct, IEventReplicant
+    {
+        return readBus.GetEventBodies<T>(out pool);
+    }
 
     public void Switch()
     {
@@ -28,5 +36,11 @@ public class EventsBuffer
         readBus = eventsBus;
 
         writeBus.DestroyAllEvents();
+    }
+
+    public void Destroy()
+    {
+        writeBus.Destroy();
+        readBus.Destroy();
     }
 }

@@ -15,10 +15,8 @@ public class CombatSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-        eventsBus.DestroyEvents<AttackDamageEvent>();
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
 
-        
         foreach (int entity in _filter.Value)
         {
             ref CombatData combatData = ref _combatPool.Value.Get(entity);
@@ -36,7 +34,7 @@ public class CombatSystem : IEcsRunSystem
         }
 
         // Attack begin
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<AttackBeginEvent>(out var eventsPool))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<AttackBeginEvent>(out var eventsPool))
         {
             int attackerEntity = eventsPool.Get(eventEnitiy).AttackerEnity;
 
@@ -45,7 +43,7 @@ public class CombatSystem : IEcsRunSystem
         }
 
         // Attack exec
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<AttackExecEvent>(out var eventsPool))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<AttackExecEvent>(out var eventsPool))
         {
             int attackerEntity = eventsPool.Get(eventEnitiy).AttackerEnity;
             if (attackerEntity == -1)
@@ -57,19 +55,19 @@ public class CombatSystem : IEcsRunSystem
 
             ref CombatData targetCombatData = ref _combatPool.Value.Get(attackerCombatData.TargetEnitity);
             
-            eventsBus.NewEvent<AttackDamageEvent>() = new AttackDamageEvent { DamagedEntity = attackerCombatData.TargetEnitity, Damage = attackerCombatData.AttackDamage };
+            eventsBuffer.NewEvent<AttackDamageEvent>() = new AttackDamageEvent { DamagedEntity = attackerCombatData.TargetEnitity, Damage = attackerCombatData.AttackDamage };
 
 
             // Player attacked
             if (_playerPool.Value.Has(attackerCombatData.TargetEnitity))
                 continue;
             
-            // TODO: ловить ивент в vision system
+            // TODO: обрабатывать в vision system
             targetCombatData.TargetEnitity = attackerEntity;
         }
         
         // Death
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<DeathEvent>(out var eventsPool))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<DeathEvent>(out var eventsPool))
         {
             int deadEntity = eventsPool.Get(eventEnitiy).DeadEntity;
             ref CombatData combatData = ref _combatPool.Value.Get(deadEntity);

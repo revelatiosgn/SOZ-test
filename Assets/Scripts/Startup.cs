@@ -28,7 +28,7 @@ public class Startup : MonoBehaviour
 
         _sharedData = new SharedData
         {
-            EventsBus = new EventsBus()
+            EventsBuffer = new EventsBuffer()
         };
 
         _systems = new EcsSystems(_world, _sharedData);
@@ -45,10 +45,6 @@ public class Startup : MonoBehaviour
             .Add(new MoveSystem())
             .Add(new BTreeSystem())
             .Add(new EventsSystem())
-            .Add(_sharedData.EventsBus.GetDestroyEventsSystem()
-                .IncSingleton<PlayerClickEvent>()
-                .IncSingleton<PlayerMoveEvent>()
-                .IncSingleton<PlayerInteractEvent>())
             .Inject()
             .Init();
     }
@@ -62,6 +58,6 @@ public class Startup : MonoBehaviour
     {
         _systems.Destroy();
         _world.Destroy();
-        _sharedData.EventsBus.Destroy();
+        _sharedData.EventsBuffer.Destroy();
     }
 }

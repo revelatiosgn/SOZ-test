@@ -10,8 +10,8 @@ public class PlayerInputSystem : IEcsRunSystem
     {
         if (Input.GetMouseButtonUp(0))
         {
-            EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-            eventsBus.NewEventSingleton<PlayerClickEvent>().MousePosition = Input.mousePosition;
+            EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
+            eventsBuffer.NewEvent<PlayerClickEvent>().MousePosition = Input.mousePosition;
         }
     }
 }

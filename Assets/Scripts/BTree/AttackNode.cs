@@ -9,8 +9,8 @@ public sealed class AttackNode : BTActionNode
 {
     public override bool Evaluate(BTBlackboard blackboard)
     {
-        EventsBus eventsBus = blackboard.Systems.GetShared<SharedData>().EventsBus;
-        eventsBus.NewEvent<AttackBeginEvent>().AttackerEnity = blackboard.Entity;
+        EventsBuffer eventsBuffer = blackboard.Systems.GetShared<SharedData>().EventsBuffer;
+        eventsBuffer.NewEvent<AttackBeginEvent>().AttackerEnity = blackboard.Entity;
 
         return true;
     }

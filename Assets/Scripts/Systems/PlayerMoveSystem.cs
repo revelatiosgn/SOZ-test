@@ -13,14 +13,16 @@ public class PlayerMoveSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
 
-        if (eventsBus.HasEventSingleton<PlayerMoveEvent>(out PlayerMoveEvent moveEvent))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<PlayerMoveEvent>(out var eventsPool))
         {
+            ref PlayerMoveEvent playerMoveEvent = ref eventsPool.Get(eventEnitiy);
+
             foreach (int entity in _filter.Value)
             {
                 ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(entity);
-                navAgentData.NavMeshAgent.destination = moveEvent.Destination;
+                navAgentData.NavMeshAgent.destination = playerMoveEvent.Destination;
                 navAgentData.NavMeshAgent.isStopped = false;
 
                 ref CombatData combatData = ref _combatPool.Value.Get(entity);

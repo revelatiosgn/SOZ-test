@@ -12,9 +12,9 @@ public class MoveSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<DeathEvent>(out var eventsPool))
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
+        
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<DeathEvent>(out var eventsPool))
         {
             int deadEntity = eventsPool.Get(eventEnitiy).DeadEntity;
             ref NavAgentData navAgentData = ref _navAgentPool.Value.Get(deadEntity);

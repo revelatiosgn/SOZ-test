@@ -14,10 +14,9 @@ public class BTreeSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-        eventsBus.DestroyEvents<AttackBeginEvent>();
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
         
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<DeathEvent>(out var eventsPool))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<DeathEvent>(out var eventsPool))
         {
             ref DeathEvent deathEvent = ref eventsPool.Get(eventEnitiy);
             ref BTreeData btreeData = ref _pool.Value.Get(deathEvent.DeadEntity);

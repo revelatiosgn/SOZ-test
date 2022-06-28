@@ -21,11 +21,13 @@ public class PlayerEventSystem : IEcsRunSystem
                 return;
         }
 
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
 
-        if (eventsBus.HasEventSingleton<PlayerClickEvent>(out PlayerClickEvent clickEvent))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<PlayerClickEvent>(out var eventsPool))
         {
-            RaycastHit[] charHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(clickEvent.MousePosition), float.MaxValue, LayerMask.GetMask("Character"));
+            Vector2 mousePosition = eventsPool.Get(eventEnitiy).MousePosition;
+
+            RaycastHit[] charHits = Physics.RaycastAll(Camera.main.ScreenPointToRay(mousePosition), float.MaxValue, LayerMask.GetMask("Character"));
 
             foreach (RaycastHit charHit in charHits)
             {
@@ -35,14 +37,14 @@ public class PlayerEventSystem : IEcsRunSystem
                     if (_playerPool.Value.Has(entity) || !_healthPool.Value.Has(entity) || _healthPool.Value.Get(entity).IsDead)
                         continue;
 
-                    eventsBus.NewEventSingleton<PlayerInteractEvent>().Entity = convertToEntity.TryGetEntity().Value;
+                    eventsBuffer.NewEvent<PlayerInteractEvent>().Entity = convertToEntity.TryGetEntity().Value;
                     return;
                 }
             }
 
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(clickEvent.MousePosition), out RaycastHit groundHit, float.MaxValue, LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePosition), out RaycastHit groundHit, float.MaxValue, LayerMask.GetMask("Ground")))
             {
-                eventsBus.NewEventSingleton<PlayerMoveEvent>().Destination = groundHit.point;
+                eventsBuffer.NewEvent<PlayerMoveEvent>().Destination = groundHit.point;
                 return;
             }
         }

@@ -13,10 +13,9 @@ public class HealthSystem : IEcsRunSystem
 
     public void Run(EcsSystems systems)
     {
-        EventsBus eventsBus = systems.GetShared<SharedData>().EventsBus;
-        eventsBus.DestroyEvents<DeathEvent>();
+        EventsBuffer eventsBuffer = systems.GetShared<SharedData>().EventsBuffer;
         
-        foreach (var eventEnitiy in eventsBus.GetEventBodies<AttackDamageEvent>(out var eventsPool))
+        foreach (var eventEnitiy in eventsBuffer.GetEventBodies<AttackDamageEvent>(out var eventsPool))
         {
             ref AttackDamageEvent attackDamageEvent = ref eventsPool.Get(eventEnitiy);
 
@@ -25,7 +24,7 @@ public class HealthSystem : IEcsRunSystem
 
             if (healthData.Health <= 0f)
             {
-                eventsBus.NewEvent<DeathEvent>().DeadEntity = attackDamageEvent.DamagedEntity;
+                eventsBuffer.NewEvent<DeathEvent>().DeadEntity = attackDamageEvent.DamagedEntity;
             }
         }
     }
